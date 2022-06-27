@@ -1,0 +1,124 @@
+-- SQL Lesson 6: Multi-table queries with JOINs
+-- SQL Lesson 7: OUTER JOINs
+
+
+Using the JOIN clause in a query, 
+we can combine row data across two separate tables using this unique key. 
+The first of the joins that we will introduce is the INNER JOIN.
+
+Join을 사용하면 unique key값을 중심으로 2개의 개별 테이블의 행 데이터를 결합할 수 있습니다.
+Inner Join 테이블 연습해봅시다. 
+
+
+---- Select query with INNER JOIN on multiple tables
+SELECT column, another_table_column, …
+FROM mytable
+INNER JOIN another_table 
+    ON mytable.id = another_table.id
+WHERE condition(s)
+ORDER BY column, … ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+
+
+---- Find the domestic and international sales for each movie
+SELECT Title, Domestic_sales, International_sales
+FROM movies
+inner join Boxoffice On movies.Id = Boxoffice.Movie_id
+---------key value를 써줄 때에는 테이블.컬럼 으로 써야 한다. 
+
+---- Show the sales numbers for each movie that did better internationally rather than domestically
+SELECT Title, Domestic_sales, International_sales
+FROM movies
+   inner join Boxoffice On movies.Id = Boxoffice.Movie_id
+Where International_sales > Domestic_sales;
+
+
+---- List all the movies by their ratings in descending order
+SELECT title, rating
+FROM movies
+  JOIN boxoffice
+    ON movies.id = boxoffice.movie_id
+ORDER BY rating DESC;
+-------------- Join을 할 때 Inner join으로 써도 되고, 그냥 join을 써도 된다. 
+
+
+
+Depending on how you want to analyze the data, 
+the INNER JOIN we used last lesson might not be sufficient 
+because the resulting table only contains data that belongs in both of the tables.
+
+If the two tables have asymmetric data, 
+which can easily happen when data is entered in different stages, 
+then we would have to use a LEFT JOIN, RIGHT JOIN or 
+FULL JOIN instead to ensure that the data you need is not left out of the results.
+
+
+두 테이블의 데이터가 비대칭인 경우 필요한 데이터가 결과에서 누락되지 않도록 LEFT JOIN, RIGHT JOIN, FULL JOIN을 대신 사용해야 합니다.
+
+Select query with LEFT/RIGHT/FULL JOINs on multiple tables
+SELECT column, another_column, …
+FROM mytable
+INNER/LEFT/RIGHT/FULL JOIN another_table 
+    ON mytable.id = another_table.matching_id
+WHERE condition(s)
+ORDER BY column, … ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+
+
+--- Find the list of all buildings that have employees
+SELECT DISTINCT building 
+FROM employees;
+-------------중복 값을 제거하기 위해 distinct를 사용하였다.
+
+--- Find the list of all buildings and their capacity
+SELECT Building_name, Capacity
+FROM Buildings ;
+
+--- List all buildings and the distinct employee roles in each building (including empty buildings)
+SELECT Building and distinct Role
+FROM Employees;
+>> 수정
+
+SELECT DISTINCT building_name, role 
+FROM buildings 
+  LEFT JOIN employees
+    ON Buildings.building_name = Employees.building;
+    
+SELECT DISTINCT building_name, role 
+FROM buildings 
+  LEFT JOIN employees
+    ON building_name = building;
+    ---------- 테이블명을 안붙히고 컬럼명만 붙혀도 붙혀진다. 
+    
+    
+-- SQL Lesson 8: A short note on NULLs
+
+Select query with constraints on NULL values
+
+SELECT column, another_column, …
+FROM mytable
+WHERE column IS/IS NOT NULL
+AND/OR another_condition
+AND/OR …;
+
+--- Find the name and role of all employees who have not been assigned to a building
+SELECT name, role
+FROM employees
+Where Building is null;
+
+
+--- Find the names of the buildings that hold no employees
+SELECT DISTINCT Building_name, Years_employed
+FROM Buildings 
+left join Employees
+Where Years_employed is 0;
+
+
+수정
+SELECT DISTINCT Building_name, Years_employed
+FROM Buildings 
+left join Employees
+On building = buliding_name
+Where Years_employed is 0;
+
+----------------- join 하고 그 밑에 ON 키벨류값을 꼭 넣어줘야 한다. 그래야 매칭이 된다. 
