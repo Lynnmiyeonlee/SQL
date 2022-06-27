@@ -1,0 +1,67 @@
+SQL filtering and sorting Query results
+
+-- distinct is 중복된 행을 맹목적으로 제거하기 때문에 
+-- 향후 그룹핑과 Group by 절을 사용하여 특정 열을 기반으로 중복을 삭제하는 법도 확인해야 한다.
+
+-- https://sqlbolt.com/lesson/filtering_sorting_query_results
+
+--- 1) 대소문자 구분있는 : != or <> // col_name != "abcd"
+--- 2) 대소문자 구분없는 : LIKE // col_name LIKE "ABC"
+--- 3) 앞뒤로 어떤게 오든 괜찮을 때 : col_name Like %AT% 
+--- 4) 문자 매칭 시킬 때 : col_name Like "AN_" (matches AND, AN)
+--- 5) 문자열이 안에 있는 거 찾을 때 : col_name IN ("A", "B")
+--- 6) 문자열이 안에 없을 때 : col_name NOT IN ("A", "B")
+
+
+-- DISTINCT (중복행 제거)
+SELECT DISTINCT column, another_column, …
+FROM mytable
+WHERE condition(s);
+
+-- ORDER BY (오름차순 / 내림차순)
+SELECT column, another_column, …
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC;
+
+-- LIMIT 숫자만큼의 행 출력
+---- Select ?* from 테이블명 orders LIMIT 숫자(★);숫자만큼의 행 출력
+---- select * from member ORDERS LIMIT 10;
+
+-- OFFSET 몇번 째 row부터 출력할지 결정 (1번째 row면 0)
+---- Select * from 테이블명 orders LIMIT 숫자(★) OFFSET 숫자(♥);
+----10행씩 출력 / 1페이지 : select * from member ORDERS LIMIT 10 OFFSET 0;
+----10행씩 출력 / 2페이지 : select * from member ORDERS LIMIT 10 OFFSET 10;
+
+
+
+
+-- List all directors of Pixar movies (alphabetically), without duplicates
+SELECT DISTINCT director
+FROM movies
+ORDER BY director ASC;
+
+ ----- ASC 알파벳 순으로 정렬 / ORDER BY 쓸 때에는 WHERE을 쓰지 않고 바로 사용
+
+
+-- List the last four Pixar movies released (ordered from most recent to least)
+SELECT title, year FROM movies
+ORDER BY year DESC
+LIMIT 4;
+
+ ---- 4개로 제한하라고 했을 때, 최근 순으로 DESC로 정렬하고 Limit를 거는 방법을 사용할 수 있다.
+
+
+-- List the first five Pixar movies sorted alphabetically ?
+SELECT *
+from movies
+order by title ASC
+limit 5;
+
+
+-- List the next five Pixar movies sorted alphabetically ?
+SELECT title FROM movies
+ORDER BY title ASC
+LIMIT 5 OFFSET 5;
+
+ ---- 5번째 그 다음 6,7,8.9,10 개를 추출하려면 OFFSET으로 5번째 열을 지정해준다. 
