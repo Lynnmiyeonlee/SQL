@@ -1,0 +1,48 @@
+SQL Lesson 9: Queries with expressions
+
+
+
+--- Example query with expressions
+
+SELECT particle_speed / 2.0 AS half_particle_speed
+FROM physics_data
+WHERE ABS(particle_position) * 10.0 > 500;
+
+
+--- Select query with expression aliases
+
+Select query with expression aliases
+SELECT col_expression AS expr_description, …
+FROM mytable;
+
+
+--- Example query with both column and table name aliases
+
+SELECT column AS better_column_name, …
+FROM a_long_widgets_table_name AS mywidgets
+INNER JOIN widget_sales
+  ON mywidgets.id = widget_sales.widget_id;
+  
+  
+  
+  
+--- List all movies and their combined sales in millions of dollars
+  
+SELECT title, ((Domestic_sales + International_sales) / 1000000) as sales
+FROM movies
+left join boxoffice on id = movie_id
+
+
+
+--- List all movies and their ratings in percent ✓
+
+SELECT title, (Rating*10) as percent
+FROM movies
+left join boxoffice on id = movie_id
+
+
+--- List all movies that were released on even number years
+
+SELECT title, year
+FROM movies
+WHERE year % 2 = 0;
