@@ -1,0 +1,31 @@
+SQL Lesson 12: Order of execution of a Query
+https://sqlbolt.com/lesson/select_queries_order_of_execution
+
+
+
+------------- Complete SELECT query
+SELECT DISTINCT column, AGG_FUNC(column_or_expression), …
+FROM mytable
+    JOIN another_table
+      ON mytable.column = another_table.column
+    WHERE constraint_expression
+    GROUP BY column
+    HAVING constraint_expression
+    ORDER BY column ASC/DESC
+    LIMIT count OFFSET COUNT;
+    
+    
+    
+------------- Find the number of movies each director has directed
+
+SELECT director, count(title)
+FROM movies
+left join boxoffice on id = movie_id
+group by director
+
+
+------------- Find the total domestic and international sales that can be attributed to each director 
+select director, sum(Domestic_sales+International_sales) as sum_sales
+from movies
+left join boxoffice on id = movie_id
+group by director
